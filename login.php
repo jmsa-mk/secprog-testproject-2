@@ -33,6 +33,10 @@
 // 2. Make sure to include the following fields in the form: username, password
 // 3. Include a link to register.php for users who don't have an account
 session_start();
+if(isset($_SESSION['user'])){
+    header('Location: index.php');
+    exit();
+}
 ?>
 
 <body class="d-flex justify-content-center align-items-center vh-100">
@@ -59,11 +63,11 @@ session_start();
                 <form action="doLogin.php" method="POST">
                     <div class="mb-3">
                         <label for="username" class="form-label text-white-50 small mb-1">Username</label>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Enter username" required>
                     </div>
                     <div class="mb-4">
                         <label for="password" class="form-label text-white-50 small mb-1">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
                     </div>
                     <div class="d-grid mb-3">
                         <button type="submit" class="btn btn-primary fw-medium" name="submit">Login</button>

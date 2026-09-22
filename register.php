@@ -31,6 +31,10 @@
 // 1. Create Post Requests from this form to doRegister.php
 // 2. Make sure to include the following fields in the form: username, email, password, confirm_password
 session_start();
+if(isset($_SESSION['user'])){
+    header('Location: index.php');
+    exit();
+}
 ?>
 
 <body class="d-flex justify-content-center align-items-center vh-100">
@@ -44,7 +48,7 @@ session_start();
                     <div class="alert alert-danger py-2">
                         <?= $_SESSION['error']; ?>
                     </div>
-                    <?php unset($_SESSION['success']); ?>
+                    <?php unset($_SESSION['error']); ?>
                 <?php endif; ?>
 
                 <form action="doRegister.php" method="POST">

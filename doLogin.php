@@ -13,9 +13,12 @@ if(isset($_POST['submit'])){
     $username = $_POST['username'];
     $password = $_POST['password'];
     
-    $q = "SELECT * FROM users WHERE username = '$username'";
-    $res = $conn->query($q);
+    $q = "SELECT * FROM users WHERE username = ?";
+    $stmt = $conn->prepare($q);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
 
+    $res = $stmt->get_result();
     if($res->num_rows > 0){
         while($users = $res->fetch_assoc()){
             if(password_verify($password, $users['password'])){
@@ -30,6 +33,10 @@ if(isset($_POST['submit'])){
     }
 
     $_SESSION['error'] = 'Wrong username or password combination';
+    header('Location: login.php');
+    exit();
+}
+else{
     header('Location: login.php');
     exit();
 }

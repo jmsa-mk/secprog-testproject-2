@@ -27,9 +27,12 @@ if(isset($_POST['submit'])){
         exit();
     }   
 
-    $q = "SELECT * FROM users WHERE email = '$email' OR username = '$username'";
-    $result = $conn->query($q);
-    if($result->num_rows > 0){
+    $q = "SELECT * FROM users WHERE email = '$email' OR username = ?";
+    $stmt = $conn->prepare($q);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    if($res->num_rows > 0){
         $_SESSION['error'] = 'Username or email already registered';
         header('Location: register.php');
         exit();
@@ -48,18 +51,17 @@ if(isset($_POST['submit'])){
     }
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    $q = "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$hashedPassword')";
+    $q = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($q);
+    $stmt->bind_param("sss", $username, $email, $hashedPassword);
+    $stmt->execute();
 
-    if($conn->query($q)){
-        $_SESSION['success'] = 'Registration successful!';
-        header('Location: login.php');
-        exit();
-    }
-    else{
-        $_SESSION['error'] = $conn->error;
-        header('Location: register.php');
-        exit();
-    }
+
+    $_SESSION['success'] = 'Registration successful!';
+    header('Location: login.php');
+    exit();
+    
+    
     
 }
 else{

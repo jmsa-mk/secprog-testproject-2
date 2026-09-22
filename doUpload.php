@@ -9,27 +9,48 @@
 session_start();
 require_once 'db.php';
 
+if(!isset($_SESSION['user'])){
+    header('Location: login.php');
+    exit();
+}
+
 if(isset($_POST['submit'])){
     // var_dump($_FILES);
     // die();
 
-    if($_FILES['fileUpload']['size'] > 5000000){
+    $fileName = $_FILES['fileUpload']['name'];
+    $fileTemp = $_FILES['fileUpload']['tmp_name'];
+    $fileSize = $_FILES['fileUpload']['size'];
+
+    if($fileSize > 5 * 1024 * 1024){
         $_SESSION['error'] = 'The maximum size of file is 5MB';
         header('Location: upload.php');
         exit();
     }
 
     $validExtension = ['jpg', 'png', 'docx', 'pdf'];
-    $fileType = $_FILES['fileUpload']['type'];
-    $fileExtension = explode('/', $fileType);
-    $fileExtension = end($fileExtension);
+    $fileType = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
-    if(!in_array($fileExtension, $validExtension)){
-        $_SESSION['error'] = 'Unsupported file type. Allowed formats: JPG, PNG, PDF, DOCX';
+    if(!in_array($fileType, $validExtension)){
+        $_SESSION['error'] = 'Only JPG, PNG, PDF, DOCX file types are allowed';
         header('Location: upload.php');
         exit();
     }
 
-    echo 'gacor';
+    $storedName = time() . '_' . bin2hex(random_bytes(8)) . '.' . $fileType;
+    move_uploaded_file($fileTemp, 'uploads/' . $storedName);
 
+    $userId = $_SESSION['user']['id'];
+
+    $q = "INSERT INTO files (user_id, original_name, stored_name, file_size, file_type) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($q);
+    $stmt->bind_param("issis", $userId, $fileName, $storedName, $fileSize, $fileType);
+    $stmt->execute();
+
+    header('Location: list.php');
+    exit();
+}
+else{
+    header('Location: index.php');
+    exit();
 }

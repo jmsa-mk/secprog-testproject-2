@@ -33,6 +33,19 @@
 // 1. Check session for user authentication if not authenticated redirect to login.php
 // 2. If authenticated display the list of uploaded files in a table format with the following columns: File Name, Size, Date Uploaded, Actions (Download/Delete)
 // 3. makesure just show data from the logged in user
+session_start();
+if(!isset($_SESSION['user'])){
+    header('Location: login.php');
+    exit();
+}
+
+require_once('db.php');
+$q = "SELECT * FROM files WHERE user_id = ?";
+$stmt = $conn->prepare($q);
+$stmt->bind_param("i", $_SESSION['user']['id']);
+$stmt->execute();
+$res = $stmt->get_result();
+
 ?>
 
 <body class="py-5">
@@ -44,6 +57,9 @@
                     <div>
                         <a href="upload.php" class="btn btn-primary me-2 fw-medium">Upload New</a>
                         <a href="index.php" class="btn btn-outline-secondary text-white">Home</a>
+                        <?php if(isset($_SESSION['user'])): ?>
+                            <a href="logout.php" class="btn btn-outline-danger">Log out</a>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -61,7 +77,7 @@
                                 </thead>
                                 <tbody>
                                     <!-- List of uploaded files will be populated here you can delete it after implementing the backend logic -->
-                                    <!-- Dummy Data 1 -->
+                                    <!--                                     
                                     <tr>
                                         <td class="ps-4 py-3 text-white">document_secret.pdf</td>
                                         <td class="py-3 text-white-50">2.4 MB</td>
@@ -71,7 +87,6 @@
                                             <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>
                                         </td>
                                     </tr>
-                                    <!-- Dummy Data 2 -->
                                     <tr>
                                         <td class="ps-4 py-3 text-white">image_backup.png</td>
                                         <td class="py-3 text-white-50">5.1 MB</td>
@@ -81,7 +96,6 @@
                                             <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>
                                         </td>
                                     </tr>
-                                    <!-- Dummy Data 3 -->
                                     <tr>
                                         <td class="ps-4 py-3 text-white">archive_data.zip</td>
                                         <td class="py-3 text-white-50">128 MB</td>
@@ -91,6 +105,18 @@
                                             <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>
                                         </td>
                                     </tr>
+                                    -->
+                                    <?php while($row = $res->fetch_assoc()): ?>
+                                        <tr>
+                                            <td class="ps-4 py-3 text-white"><?= $row['original_name']?></td>
+                                            <td class="py-3 text-white-50"><?= round($row['file_size'] / (1024 * 1024), 2)?> MB</td>
+                                            <td class="py-3 text-white-50"><?= date('M d, Y', strtotime($row['uploaded_at']))?></td>
+                                            <td class="text-end pe-4 py-3">
+                                                <a href="#" class="btn btn-sm btn-outline-info me-1">Download</a>
+                                                <a href="doDelete.php?id=<?= $row['id']?>" class="btn btn-sm btn-outline-danger">Delete</a>
+                                            </td>
+                                        </tr>
+                                    <?php endwhile; ?>
                                 </tbody>
                             </table>
                         </div>
