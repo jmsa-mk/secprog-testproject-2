@@ -29,7 +29,7 @@ if(isset($_POST['submit'])){
         }
     }
 
-    $_SESSION['error'] = 'Invalid username or password';
+    $_SESSION['error'] = 'Wrong username or password combination';
     header('Location: login.php');
     exit();
 }
