@@ -32,6 +32,7 @@
 // 1. Check session for user authentication if not authenticated redirect to login.php
 // 2. If authenticated display the upload form with a file input and a submit button
 // 3. The form should submit to doUpload.php using POST method and enctype="multipart/form-data"
+require_once 'init.php';
 session_start();
 if(!isset($_SESSION['user'])){
     header('Location: login.php');

@@ -1,5 +1,5 @@
 <?php
-
+require_once 'init.php';
 $hostname = "localhost";
 $username = "root";
 $password = '';

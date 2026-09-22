@@ -5,6 +5,7 @@
 // 3. Check if the username or email already exists in the database
 // 4. If validation passes, hash the password and insert the new user into the database
 // 5. If registration is successful, redirect to login.php with a success message
+require_once 'init.php';
 session_start();
 
 require_once 'db.php';
@@ -27,9 +28,9 @@ if(isset($_POST['submit'])){
         exit();
     }   
 
-    $q = "SELECT * FROM users WHERE email = '$email' OR username = ?";
+    $q = "SELECT * FROM users WHERE email = ? OR username = ?";
     $stmt = $conn->prepare($q);
-    $stmt->bind_param("s", $username);
+    $stmt->bind_param("ss", $email, $username);
     $stmt->execute();
     $res = $stmt->get_result();
     if($res->num_rows > 0){

@@ -5,7 +5,7 @@
 // 3. If the credentials are valid, start a session and redirect to index.php
 // 4. If the credentials are invalid, redirect back to login.php with an error message
 // 5. Dont forget to include session_start() at the beginning of the file to manage user sessions
-
+require_once 'init.php';
 session_start();
 require_once 'db.php';
 
@@ -22,6 +22,7 @@ if(isset($_POST['submit'])){
     if($res->num_rows > 0){
         while($users = $res->fetch_assoc()){
             if(password_verify($password, $users['password'])){
+                session_regenerate_id(true);
                 $_SESSION['user'] = [
                     'id' => $users['id'],
                     'username' => $users['username']

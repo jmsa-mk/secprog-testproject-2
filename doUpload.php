@@ -5,7 +5,7 @@
 // try to limit the file size to 5MB and only allow certain file types (e.g., PDF, DOCX, JPG, PNG)
 // 3. Move the uploaded file to a designated directory on the server (e.g., "uploads/")
 // 4. Store the file information (e.g., file name, size, upload date, user ID) in the database for future reference
-
+require_once 'init.php';
 session_start();
 require_once 'db.php';
 

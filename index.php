@@ -18,6 +18,7 @@
 // your mission in this file:
 // 1. Check session for user authentication if not authenticated redirect to login.php
 // 2. If authenticated display the following options: Upload File, View Uploads 
+require_once 'init.php';
 session_start();
 if(!isset($_SESSION['user'])){
     header('Location: login.php');

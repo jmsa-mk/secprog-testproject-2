@@ -33,6 +33,7 @@
 // 1. Check session for user authentication if not authenticated redirect to login.php
 // 2. If authenticated display the list of uploaded files in a table format with the following columns: File Name, Size, Date Uploaded, Actions (Download/Delete)
 // 3. makesure just show data from the logged in user
+require_once 'init.php';
 session_start();
 if(!isset($_SESSION['user'])){
     header('Location: login.php');
@@ -124,7 +125,7 @@ $res = $stmt->get_result();
                 </div>
                 
                 <div class="text-center mt-4">
-                    <p class="text-white-50 small">Showing 3 files in your vault.</p>
+                    <p class="text-white-50 small">Showing <?= $res->num_rows ?> files in your vault.</p>
                 </div>
             </div>
         </div>

@@ -30,6 +30,7 @@
 // your mission in this file:
 // 1. Create Post Requests from this form to doRegister.php
 // 2. Make sure to include the following fields in the form: username, email, password, confirm_password
+require_once 'init.php';
 session_start();
 if(isset($_SESSION['user'])){
     header('Location: index.php');
@@ -45,7 +46,7 @@ if(isset($_SESSION['user'])){
                 <p class="text-white-50 mb-4 text-center">Join us to store your files securely.</p>
 
                 <?php if (isset($_SESSION['error'])): ?>
-                    <div class="alert alert-danger py-2">
+                    <div class="alert alert-danger">
                         <?= $_SESSION['error']; ?>
                     </div>
                     <?php unset($_SESSION['error']); ?>

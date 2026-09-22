@@ -32,6 +32,7 @@
 // 1. Create Post Requests from this form to doLogin.php
 // 2. Make sure to include the following fields in the form: username, password
 // 3. Include a link to register.php for users who don't have an account
+require_once 'init.php';
 session_start();
 if(isset($_SESSION['user'])){
     header('Location: index.php');
@@ -47,14 +48,14 @@ if(isset($_SESSION['user'])){
                 <p class="text-white-50 mb-4 text-center">Please login to your account.</p>
 
                 <?php if (isset($_SESSION['success'])): ?>
-                    <div class="alert alert-success py-2">
+                    <div class="alert alert-success">
                         <?= $_SESSION['success']; ?>
                     </div>
                     <?php unset($_SESSION['success']); ?>
                 <?php endif; ?>
 
                 <?php if (isset($_SESSION['error'])): ?>
-                    <div class="alert alert-danger py-2">
+                    <div class="alert alert-danger">
                         <?= $_SESSION['error']; ?>
                     </div>
                     <?php unset($_SESSION['error']); ?>

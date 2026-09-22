@@ -1,7 +1,7 @@
 <?php
 //Coba latihan delete sendiri koh
 //CRUD agak kurang kalo insert doang :) 
-
+require_once 'init.php';
 session_start();
 require_once 'db.php';
 
